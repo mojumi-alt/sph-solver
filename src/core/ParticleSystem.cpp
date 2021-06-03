@@ -6,7 +6,7 @@ namespace SPH
 {
 ParticleSystem::ParticleSystem(std::vector<Particle> initialState,
                                Vector2d domainSize) noexcept
-    : domainSize(domainSize), particles(initialState)
+    : domainSize(domainSize), particles(initialState), hash_(domainSize[0], domainSize[1], domainSize[0] / h, domainSize[1] / h)
 {
 }
 
@@ -46,6 +46,8 @@ double laplaceWpoly6(const double r, const double h)
 
 void ParticleSystem::advance(const double dt) noexcept
 {
+    hash_.clear();
+    hash_.hash(particles);
     calculateForces();
     for (auto &pi : particles)
     {
@@ -53,12 +55,16 @@ void ParticleSystem::advance(const double dt) noexcept
         pi.location += pi.velocity * dt;
     }
 
+    hash_.clear();
+    hash_.hash(particles);
     calculateForces();
     for (auto &pi : particles)
     {
         pi.velocity += pi.acceleration * (dt / 2.0);
         applyBoundaries(pi);
+        pi.external = Vector2d(0.0, 0.0);
     }
+
 }
 
 void ParticleSystem::applyBoundaries(Particle &p) noexcept
@@ -73,7 +79,7 @@ void ParticleSystem::applyBoundaries(Particle &p) noexcept
     if (p.location[1] > domainSize[1] - p.h)
     {
         p.location[1] = domainSize[1] - p.h;
-        p.velocity[1] = -p.velocity[1] * 0.8;
+        p.velocity[1] = -p.velocity[1] * 0.1;
         p.acceleration[1] = 0;
     }
 
@@ -87,7 +93,7 @@ void ParticleSystem::applyBoundaries(Particle &p) noexcept
     if (p.location[1] < p.h)
     {
         p.location[1] = p.h;
-        p.velocity[1] = -p.velocity[1] * 0.8;
+        p.velocity[1] = -p.velocity[1] * 0.1;
         p.acceleration[1] = 0;
     }
 }
@@ -102,12 +108,15 @@ void ParticleSystem::calculateForces() noexcept
         pi.surfaceForce = Vector2d(0.0, 0.0);
         pi.kappa = 0;
         pi.surfaceNormal = Vector2d(0.0, 0.0);
+        pi.h_real = 0.1;
 
         for (auto &pj : particles)
         {
             pi.rho += pj.mass * wpoly6(length(pj.location - pi.location), pi.h);
             pi.pressure = stiffness * (pi.rho - restDensity);
+            interactions++;
         }
+
     }
 
     for (auto &pi : particles)
@@ -118,6 +127,9 @@ void ParticleSystem::calculateForces() noexcept
             auto l = length(direction);
             if (l == 0)
                 continue;
+            interactions++;
+            
+            //pj.h_real = std::max(0.05, std::min(pj.h_real, l - pi.h_real));
             direction /= l;
 
             pi.pressureForce +=
@@ -129,6 +141,15 @@ void ParticleSystem::calculateForces() noexcept
                 (pj.mass * (length(pi.velocity - pj.velocity) / pj.rho) *
                  laplaceWpoly6(l, pi.h));
 
+            auto normal = direction * (pj.mass * (1 / pj.rho) * nabblaWpoly6(l, pi.h));
+            auto n = length(normal);
+            if (n < 0.000001)
+                continue;
+            auto kappa = (pj.mass * (1 / pj.rho) * laplaceWpoly6(l, pi.h));
+
+
+            pi.surfaceForce += (normal / n) * kappa;
+            /*
             pi.surfaceNormal +=
                 direction * (pj.mass * (1 / pj.rho) * nabblaWpoly6(l, pi.h));
 
@@ -137,19 +158,18 @@ void ParticleSystem::calculateForces() noexcept
                 continue;
 
             pi.kappa = (pj.mass * (1 / pj.rho) * laplaceWpoly6(l, pi.h));
-            pi.surfaceForce = (pi.surfaceNormal / n) * pi.kappa;
+            pi.surfaceForce += (pi.surfaceNormal / n); // * pi.kappa; */
         }
-        pi.pressureForce = -pi.pressureForce;
+        pi.pressureForce = pi.pressureForce;
         pi.viscosityForce *= mu;
-        pi.surfaceForce = -pi.surfaceForce * sigma;
+        pi.surfaceForce = pi.surfaceForce * sigma;
     }
 
     for (auto &pi : particles)
     {
-        pi.acceleration = Vector2d(0.0, 0.0);
+        pi.acceleration = Vector2d(0.0, 0.01);
 
-        Vector2d forces =
-            pi.pressureForce + pi.viscosityForce + pi.surfaceForce;
+        Vector2d forces = pi.pressureForce + pi.surfaceForce + pi.viscosityForce + pi.external;
         pi.acceleration += forces / pi.rho;
     }
 }

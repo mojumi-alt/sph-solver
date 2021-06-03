@@ -5,9 +5,9 @@
 
 namespace SPH
 {
-class Particle
-{
-  public:
+  struct Particle
+  {
+    size_t id;
     Vector2d location = Vector2d(0.0, 0.0);
     Vector2d velocity = Vector2d(0.0, 0.0);
     Vector2d acceleration = Vector2d(0.0, 0.0);
@@ -16,10 +16,10 @@ class Particle
     Vector2d viscosityForce = Vector2d(0.0, 0.0);
     Vector2d surfaceForce = Vector2d(0.0, 0.0);
     Vector2d surfaceNormal = Vector2d(0.0, 0.0);
+    Vector2d external = Vector2d(0.0, 0.0);
+    double h_real = 0;
     double kappa = 0;
-
-    Particle(const Vector2d location) noexcept;
-};
+  };
 } // namespace SPH
 
 #endif

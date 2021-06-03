@@ -5,6 +5,7 @@
 #include <SFML/Window.hpp>
 
 #include <core/ParticleSystem.hpp>
+#include <visualizer/Colormap.hpp>
 
 namespace SPH
 {
@@ -17,8 +18,14 @@ class Window
     void run() noexcept;
 
   private:
+    Colormap cmap;
+    sf::Font font;
+    sf::Text stats;
     std::vector<sf::CircleShape> circles;
+    sf::VertexArray lines;
     sf::VertexArray boundaries;
+    sf::VertexArray tiles;
+    sf::VertexArray hash_lines;
     ParticleSystem &ps;
 
     void update() noexcept;

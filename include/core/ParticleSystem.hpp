@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <core/Particle.hpp>
+#include "core/SpatialHash.hpp"
 #include <vector>
 
 namespace SPH
@@ -10,10 +11,12 @@ namespace SPH
 class ParticleSystem
 {
   public:
+    int interactions = 0;
     double stiffness = 0.1;
-    double restDensity = 1000;
+    double restDensity = 1900;
     double mu = 0.1;
-    double sigma = 100;
+    double sigma = 4;
+    double h = 0.3;
     Vector2d gravity = Vector2d(0.0, 0.0);
 
     explicit ParticleSystem(std::vector<Particle> initialState,
@@ -24,6 +27,7 @@ class ParticleSystem
     const Vector2d getDomainSize() const noexcept;
     void advance(const double dt) noexcept;
 
+    SpatialHash hash_;
   private:
     Vector2d domainSize;
     std::vector<Particle> particles;
