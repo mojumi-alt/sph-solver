@@ -16,13 +16,11 @@ int main()
 
     size_t current_id = 0;
 
-    for (float x = size; x < width; x += size)
-        for (float y = 8; y < height; y += size)
+    for (float x = size; x < width - size; x += size)
+        for (float y = 8; y < height - size; y += size)
             particles.push_back(sph::Particle{.s = {x, y}});
 
-    particles.push_back(sph::Particle{.s = {3.0, 3.0}});
-
-    particles.push_back(sph::Particle{.s = {3.0, 3.1}});
+    particles.push_back(sph::Particle{.s = {5.0, 1.0}});
 
     sph::ParticleSystem ps(particles, {width, height}, size);
 

@@ -29,7 +29,7 @@ class Visualizer
 
     /**
      * @brief Open and run visualizer window.
-     * 
+     *
      */
     void run() noexcept;
 
@@ -55,8 +55,8 @@ class Visualizer
      * @brief Compute the "optimal" visual particle radius.
      * Sometimes the physical radius is to big so it obscures everything
      * so we may choose one thats a bit smaller.
-     * 
-     * @return The radius estimation. 
+     *
+     * @return The radius estimation.
      */
     float compute_optimal_h_() noexcept;
 };

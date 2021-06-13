@@ -91,24 +91,32 @@ void ParticleSystem::calculate_forces_() noexcept
             if (bucket.size() == 0)
                 continue;
 
-            // Cell size matches up with kernel radius, so we 
+            // Cell size matches up with kernel radius, so we
             // have to only consider direct neighbours.
-            int top = std::max(0, y - 1), left = std::max(0, x - 1),
-                right = std::min(width, x + 2),
+            int right = std::min(width, x + 2),
                 bottom = std::min(height, y + 2);
 
+            // Actually we only have to not consider all the top
+            // left neighbours either.
+            int left = x;
+
             // Compute interactions with neighbours.
-            for (int i = top; i < bottom; ++i)
+            for (int i = y; i < bottom; ++i)
+            {
                 for (int j = left; j < right; ++j)
                 {
 
                     // Get other search bucket.
-                    const auto &other_bucket = hash_.get_bucket(j, i);
+                    auto &other_bucket = hash_.get_bucket(j, i);
 
-                    // Finally compute new forces between contents 
+                    // Do not consider empty buckets.
+                    if (other_bucket.size() == 0)
+                        continue;
+
+                    // Finally compute new forces between contents
                     // of 2 buckets.
                     for (auto &pi : bucket)
-                        for (const auto &pj : other_bucket)
+                        for (auto &pj : other_bucket)
                         {
                             // Just for funnsies.
                             interactions++;
@@ -123,37 +131,54 @@ void ParticleSystem::calculate_forces_() noexcept
 
                             // Normalize direction.
                             direction /= l;
-                            interactions++;
 
                             // Compute pressure force
-                            pi->f += direction *
-                                     (pj->m * ((pi->P + pj->P) / (2 * pj->p)) *
-                                      kernels::nabbla_poly6(l, h_));
+                            auto f_pressure =
+                                direction *
+                                (pj->m * ((pi->P + pj->P) / (2 * pj->p)) *
+                                 kernels::nabbla_poly6(l, h_));
 
                             // Compute viscosity force
-                            pi->f += direction *
-                                     (pj->m * (length(pi->v - pj->v) / pj->p) *
-                                      kernels::laplace_poly6(l, h_)) *
-                                     mu;
+                            auto f_viscosity =
+                                direction *
+                                (pj->m * (length(pi->v - pj->v) / pj->p) *
+                                 kernels::laplace_poly6(l, h_)) *
+                                mu;
 
                             // Compute surface normal.
                             auto surface_normal =
                                 direction * (pj->m * (1 / pj->p) *
                                              kernels::nabbla_poly6(l, h_));
+
+                            sf::Vector2f f_surface;
                             auto n = length(surface_normal);
 
                             // Check if actual surface.
-                            if (n < epsilon)
-                                continue;
+                            if (n >= epsilon)
+                            {
 
-                            // Compute surface curvature.
-                            auto kappa = (pj->m * (1 / pj->p) *
-                                          kernels::laplace_poly6(l, h_));
+                                // Compute surface curvature.
+                                auto kappa = (pj->m * (1 / pj->p) *
+                                              kernels::laplace_poly6(l, h_));
 
-                            // Compute surface force.
-                            pi->f += (surface_normal / n) * kappa * sigma;
+                                // Compute surface force.
+                                f_surface +=
+                                    (surface_normal / n) * kappa * sigma;
+                            }
+
+                            // Compute total force.
+                            auto f_total = f_pressure + f_viscosity + f_surface;
+                            pi->f += f_total;
+
+                            // For now we only avoid double computation for not
+                            // identity buckets.
+                            if (i != y or j != x)
+                                pj->f -= f_total;
                         }
                 }
+
+                left = std::max(0, x - 1);
+            }
         }
 }
 

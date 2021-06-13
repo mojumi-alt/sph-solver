@@ -17,7 +17,7 @@ class ParticleSystem
 {
   public:
     size_t interactions = 0;
-    float k = 0.1, p_rest = 1900, mu = 0.1, sigma = 0.4, epsilon = 0.00001;
+    float k = 0.5, p_rest = 1800, mu = 0.3, sigma = 0.5, epsilon = 0.00001;
     sf::Vector2f gravity{0, 0.3};
 
     /**
