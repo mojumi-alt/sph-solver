@@ -4,6 +4,7 @@
 #include <cmath>
 #include <vector>
 
+#include "Obstacle.hpp"
 #include "Particle.hpp"
 #include "SpatialHash.hpp"
 
@@ -17,8 +18,8 @@ class ParticleSystem
 {
   public:
     size_t interactions = 0;
-    float k = 0.5, p_rest = 1800, mu = 0.3, sigma = 0.5, epsilon = 0.00001;
-    sf::Vector2f gravity{0, 0.3};
+    float k = 1.3, p_rest = 1100, mu = 0.1, sigma = 5.0, epsilon = 0.00001;
+    sf::Vector2f gravity{0.0, 0.0981};
 
     /**
      * @brief Construct a new Particle System object
@@ -28,6 +29,7 @@ class ParticleSystem
      */
     explicit ParticleSystem(std::vector<Particle> initial_state,
                             sf::Vector2f domain_size,
+                            std::vector<Obstacle> obstacles,
                             const float h = 0.3) noexcept;
 
     /**
@@ -78,11 +80,19 @@ class ParticleSystem
      */
     float get_particle_size() const noexcept;
 
+    /**
+     * @brief Get the obstacles object
+     *
+     * @return std::vector<Obstacle>&
+     */
+    std::vector<Obstacle> &get_obstacles() noexcept;
+
   private:
     float h_;
     SpatialHash hash_;
     sf::Vector2f domain_size_;
     std::vector<Particle> particles_;
+    std::vector<Obstacle> obstacles_;
 
     /**
      * @brief
@@ -96,5 +106,11 @@ class ParticleSystem
      *
      */
     void calculate_forces_() noexcept;
+
+    /**
+     * @brief
+     *
+     */
+    void apply_obstacles_() noexcept;
 };
 } // namespace sph

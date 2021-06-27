@@ -13,9 +13,11 @@ inline float length(const sf::Vector2f &v)
 }
 
 ParticleSystem::ParticleSystem(std::vector<Particle> initial_state,
-                               sf::Vector2f domain_size, const float h) noexcept
+                               sf::Vector2f domain_size,
+                               std::vector<Obstacle> obstacles,
+                               const float h) noexcept
     : h_(h), hash_(domain_size, h), domain_size_(domain_size),
-      particles_(initial_state)
+      particles_(initial_state), obstacles_(obstacles)
 {
 }
 
@@ -43,6 +45,8 @@ void ParticleSystem::advance(const float dt) noexcept
 {
     interactions = 0;
     integrate(*this, dt);
+
+    apply_obstacles_();
 
     for (auto &particle : particles_)
         apply_boundaries_(particle);
@@ -189,30 +193,51 @@ void ParticleSystem::apply_boundaries_(Particle &p) noexcept
     if (p.s.x > domain_size_.x - h_)
     {
         p.s.x = domain_size_.x - h_;
-        p.v.x = -p.v.x * 0.0;
-        p.a.x = 0;
+        p.v.x = -p.v.x * 0.5;
     }
 
     if (p.s.y > domain_size_.y - h_)
     {
         p.s.y = domain_size_.y - h_;
-        p.v.y = -p.v.y * 0.1;
-        p.a.y = 0;
+        p.v.y = -p.v.y * 0.5;
     }
 
     if (p.s.x < h_)
     {
         p.s.x = h_;
-        p.v.x = -p.v.x * 0.0;
-        p.a.x = 0;
+        p.v.x = -p.v.x * 0.5;
     }
 
     if (p.s.y < h_)
     {
         p.s.y = h_;
-        p.v.y = -p.v.y * 0.1;
-        p.a.y = 0;
+        p.v.y = -p.v.y * 0.5;
     }
+}
+
+void ParticleSystem::apply_obstacles_() noexcept
+{
+    for (auto &obstacle : obstacles_)
+        for (auto &particle : particles_)
+        {
+            interactions++;
+            auto distance = obstacle.distance(particle.s);
+
+            if (distance >= h_)
+                continue;
+
+            auto len = length(particle.v);
+            auto dir = particle.v / len;
+
+            auto n = dir * (h_ - distance);
+            particle.s -= n;
+            particle.v = obstacle.bounce * obstacle.reflect(dir) * len;
+        }
+}
+
+std::vector<Obstacle> &ParticleSystem::get_obstacles() noexcept
+{
+    return obstacles_;
 }
 
 } // namespace sph

@@ -13,6 +13,7 @@ set(sources
     ./src/Grid.cc
     ./src/Integrator.cc
     ./src/Kernels.cc
+    ./src/Obstacle.cc
     ./src/ParticleSystem.cc
     ./src/SpatialHash.cc
     ./src/TileMap.cc

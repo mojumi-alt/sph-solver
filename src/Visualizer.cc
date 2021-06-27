@@ -37,6 +37,20 @@ Visualizer::Visualizer(ParticleSystem &ps, const float scaling) noexcept
     for (size_t i = 0; i < force_arrows_.getVertexCount(); ++i)
         force_arrows_[i].color = sf::Color::Black;
 
+    auto ps_obstacles = ps.get_obstacles();
+    obstacles_.resize(ps_obstacles.size() * vertices_per_line);
+    obstacles_.setPrimitiveType(sf::Lines);
+    for (size_t i = 0; i < ps_obstacles.size(); ++i)
+    {
+        sf::Vertex *current = &obstacles_[i * vertices_per_line];
+
+        auto [start, end] = ps_obstacles[i].get_line_coords();
+        current[0].position = start;
+        current[0].color = sf::Color(foreground_color);
+        current[1].position = end;
+        current[1].color = sf::Color(foreground_color);
+    }
+
     boundaries_.set_color(sf::Color(foreground_color));
     hash_grid_.set_color(sf::Color(foreground_color));
 
@@ -107,7 +121,7 @@ void Visualizer::run() noexcept
             }
         }*/
 
-        ps_.advance(0.03);
+        ps_.advance(0.05);
         auto update_time = clk.getElapsedTime().asMilliseconds();
         clk.restart();
         update_();
@@ -116,6 +130,7 @@ void Visualizer::run() noexcept
         window.draw(hash_tiles_);
         window.draw(hash_grid_);
         window.draw(circles_);
+        window.draw(obstacles_);
         window.draw(force_arrows_);
 
         std::stringstream ss;
@@ -133,20 +148,20 @@ void Visualizer::update_() noexcept
 
     constexpr size_t vertices_per_line = 2, vertices_per_quad = 4;
 
-    float max = 0, min = std::numeric_limits<float>::infinity();
+    static float max = 0, min = std::numeric_limits<float>::infinity();
     const auto &particles = ps_.get_particles();
 
     for (auto &particle : particles)
     {
-        max = std::max(particle.p, max);
-        min = std::min(particle.p, min);
+        max = std::max(length(particle.v), max);
+        min = std::min(length(particle.v), min);
     }
 
     for (size_t i = 0; i < ps_.get_particles().size(); ++i)
     {
         const Particle &particle = particles[i];
-        circles_.set_color(i,
-                           cmap_.map[((particle.p - min) / (max - min)) * 255]);
+        circles_.set_color(
+            i, cmap_.map[((length(particle.v) - min) / (max - min)) * 255]);
         circles_.set_location(i, particle.s);
 
         auto len = length(particle.a);

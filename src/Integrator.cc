@@ -11,8 +11,6 @@ void integrate(ParticleSystem &ps, const float dt)
         pi.v += pi.a * (dt / 2.f);
         pi.s += pi.v * dt;
     }
-
-
 }
 
 } // namespace sph

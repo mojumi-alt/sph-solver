@@ -39,7 +39,7 @@ class Visualizer
     ColorMap cmap_;
     sf::Font font_;
     sf::Text stats_;
-    sf::VertexArray force_arrows_;
+    sf::VertexArray force_arrows_, obstacles_;
     visualization::CircleMap circles_;
     visualization::Grid boundaries_, hash_grid_;
     visualization::TileMap hash_tiles_;
