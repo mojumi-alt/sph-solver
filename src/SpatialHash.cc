@@ -23,7 +23,7 @@ void SpatialHash::hash(std::vector<Particle> &particles) noexcept
             y = particle.s.y / domain_size_.y * segments_.y;
 
         if (x < 0 || y < 0 || x >= segments_.x || y >= segments_.y)
-            return;
+            continue;
 
         bucket &target_bucket = map_[x + y * segments_.x];
         target_bucket.push_back(&particle);
