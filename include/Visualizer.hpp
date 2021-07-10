@@ -16,7 +16,7 @@ class Visualizer
 {
   public:
     const size_t foreground_color = 0x98C1D9FF, background_color = 0x3D5A80FF,
-                 hash_tile_color = 0x000030FF;
+                 hash_tile_color = 0x00003060;
     const float offset = 1.f;
 
     /**
@@ -35,6 +35,7 @@ class Visualizer
 
   private:
     ParticleSystem &ps_;
+    size_t particle_count_;
     float scaling_, h_;
     ColorMap cmap_;
     sf::Font font_;

@@ -9,36 +9,36 @@ namespace sph
 class Obstacle
 {
   public:
-    float bounce = 0.8;
+    float bounce = 0.9;
 
     /**
      * @brief Construct a new Obstacle object
-     * 
-     * @param start 
-     * @param end 
+     *
+     * @param start
+     * @param end
      */
     explicit Obstacle(sf::Vector2f start, sf::Vector2f end);
 
     /**
-     * @brief 
-     * 
-     * @param point 
-     * @return float 
+     * @brief
+     *
+     * @param point
+     * @return float
      */
     float distance(sf::Vector2f point) const noexcept;
 
     /**
-     * @brief 
-     * 
-     * @param incident 
-     * @return sf::Vector2f 
+     * @brief
+     *
+     * @param incident
+     * @return sf::Vector2f
      */
     sf::Vector2f reflect(sf::Vector2f incident) const noexcept;
 
     /**
      * @brief Get the line coords object
-     * 
-     * @return std::pair<sf::Vector2f, sf::Vector2f> 
+     *
+     * @return std::pair<sf::Vector2f, sf::Vector2f>
      */
     std::pair<sf::Vector2f, sf::Vector2f> get_line_coords() const noexcept;
 
@@ -47,18 +47,18 @@ class Obstacle
     float length_, theta_, sin_theta_, cos_theta_;
 
     /**
-     * @brief 
-     * 
-     * @param point 
-     * @return sf::Vector2f 
+     * @brief
+     *
+     * @param point
+     * @return sf::Vector2f
      */
     sf::Vector2f project_on_(sf::Vector2f point) const noexcept;
 
     /**
-     * @brief 
-     * 
-     * @param point 
-     * @return sf::Vector2f 
+     * @brief
+     *
+     * @param point
+     * @return sf::Vector2f
      */
     sf::Vector2f inverse_project_on_(sf::Vector2f point) const noexcept;
 };

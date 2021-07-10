@@ -42,4 +42,20 @@ add_executable(slope "${sources}" ./examples/Slope.cc)
 target_include_directories(slope PRIVATE ./include)
 target_link_libraries(slope PRIVATE sfml-graphics sfml-window sfml-system)
 
+add_executable(dam_break "${sources}" ./examples/DamBreak.cc)
+target_include_directories(dam_break PRIVATE ./include)
+target_link_libraries(dam_break PRIVATE sfml-graphics sfml-window sfml-system)
+
+add_executable(horizontal "${sources}" ./examples/Horizontal.cc)
+target_include_directories(horizontal PRIVATE ./include)
+target_link_libraries(horizontal PRIVATE sfml-graphics sfml-window sfml-system)
+
+add_executable(flow "${sources}" ./examples/Flow.cc)
+target_include_directories(flow PRIVATE ./include)
+target_link_libraries(flow PRIVATE sfml-graphics sfml-window sfml-system)
+
+add_executable(explode "${sources}" ./examples/Explode.cc)
+target_include_directories(explode PRIVATE ./include)
+target_link_libraries(explode PRIVATE sfml-graphics sfml-window sfml-system)
+
 configure_file(./resources/arial.ttf arial.ttf COPYONLY)

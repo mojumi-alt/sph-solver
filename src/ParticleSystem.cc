@@ -3,6 +3,7 @@
 #include "Kernels.hpp"
 
 #include <algorithm>
+#include <iostream>
 
 namespace sph
 {
@@ -15,9 +16,10 @@ inline float length(const sf::Vector2f &v)
 ParticleSystem::ParticleSystem(std::vector<Particle> initial_state,
                                sf::Vector2f domain_size,
                                std::vector<Obstacle> obstacles,
+                               std::vector<Inflow> inflows,
                                const float h) noexcept
     : h_(h), hash_(domain_size, h), domain_size_(domain_size),
-      particles_(initial_state), obstacles_(obstacles)
+      particles_(initial_state), obstacles_(obstacles), inflows_(inflows)
 {
 }
 
@@ -44,6 +46,9 @@ const SpatialHash &ParticleSystem::get_spatial_hash() const noexcept
 void ParticleSystem::advance(const float dt) noexcept
 {
     interactions = 0;
+    for (auto &inflow : inflows_)
+        inflow.advance(particles_, dt);
+
     integrate(*this, dt, vmax);
 
     apply_obstacles_();

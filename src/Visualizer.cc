@@ -18,8 +18,8 @@ inline sf::Vector2u vec_ceil(const sf::Vector2f &vec)
 
 Visualizer::Visualizer(ParticleSystem &ps, const float scaling) noexcept
     : scaling_(scaling), ps_(ps), h_(compute_optimal_h_()),
-      cmap_(color_maps::rainbow), circles_(ps.get_particles().size(), h_),
-      boundaries_({2, 2}, ps.get_domain_size()),
+      particle_count_(ps.get_particles().size()), cmap_(color_maps::rainbow),
+      circles_(particle_count_, h_), boundaries_({2, 2}, ps.get_domain_size()),
       hash_grid_(vec_ceil(ps_.get_domain_size() / ps_.get_particle_size()) +
                      sf::Vector2u{1, 1},
                  {ps_.get_particle_size(), ps_.get_particle_size()}),
@@ -32,7 +32,7 @@ Visualizer::Visualizer(ParticleSystem &ps, const float scaling) noexcept
     stats_.setScale(0.006, 0.006);
 
     constexpr size_t vertices_per_line = 2;
-    force_arrows_.resize(ps.get_particles().size() * vertices_per_line);
+    force_arrows_.resize(particle_count_ * vertices_per_line);
     force_arrows_.setPrimitiveType(sf::Lines);
     for (size_t i = 0; i < force_arrows_.getVertexCount(); ++i)
         force_arrows_[i].color = sf::Color::Black;
@@ -52,7 +52,7 @@ Visualizer::Visualizer(ParticleSystem &ps, const float scaling) noexcept
     }
 
     boundaries_.set_color(sf::Color(foreground_color));
-    hash_grid_.set_color(sf::Color(foreground_color));
+    hash_grid_.set_color(sf::Color(0xFFFFFF30));
 
     update_();
 }
@@ -72,8 +72,6 @@ void Visualizer::run() noexcept
     view.setViewport(sf::FloatRect(0.0f, 0.f, offset, offset));
 
     sf::Clock clk;
-    bool interact = false;
-    ps_.advance(0.03);
 
     while (window.isOpen())
     {
@@ -83,43 +81,9 @@ void Visualizer::run() noexcept
         {
             if (event.type == sf::Event::Closed)
                 window.close();
-
-            if (event.type == sf::Event::MouseButtonPressed)
-            {
-                interact = true;
-            }
-
-            if (event.type == sf::Event::MouseButtonReleased)
-            {
-                interact = false;
-            }
         }
 
         window.clear(sf::Color(background_color));
-
-        /*
-        if (interact)
-        {
-            auto sf_location =
-                window.mapPixelToCoords(sf::Mouse::getPosition(window));
-            auto location = Vector2d((float)sf_location.x - 0.3,
-                                     (float)sf_location.y - 0.3);
-            sf::CircleShape marker;
-            marker.setPosition(sf_location.x - 0.3, sf_location.y - 0.3);
-            marker.setFillColor(sf::Color(0, 0, 0, 128));
-            marker.setRadius(0.3);
-            window.draw(marker);
-            for (auto &pi : ps.getParticles())
-            {
-                auto dir = pi.location - location;
-                auto len = length(dir);
-
-                if (len == 0 or len > 0.3)
-                    continue;
-
-                pi.external = dir / len * 1000.0;
-            }
-        }*/
 
         ps_.advance(0.05);
         auto update_time = clk.getElapsedTime().asMilliseconds();
@@ -148,20 +112,31 @@ void Visualizer::update_() noexcept
 
     constexpr size_t vertices_per_line = 2, vertices_per_quad = 4;
 
-    static float max = 0, min = std::numeric_limits<float>::infinity();
-    const auto &particles = ps_.get_particles();
-
-    for (auto &particle : particles)
+    size_t current_ps_count = ps_.get_particles().size();
+    if (current_ps_count > particle_count_)
     {
-        max = std::max(length(particle.v), max);
-        min = std::min(length(particle.v), min);
+        force_arrows_.resize(current_ps_count * vertices_per_line);
+        for (int i = particle_count_; i < current_ps_count; ++i)
+        {
+            circles_.push(h_);
+
+            sf::Vertex *line = &force_arrows_[i * vertices_per_line];
+            line[0].color = sf::Color::Black;
+            line[1].color = sf::Color::Black;
+        }
+
+        particle_count_ = current_ps_count;
     }
 
-    for (size_t i = 0; i < ps_.get_particles().size(); ++i)
+    float vmax = length({ps_.vmax, ps_.vmax}), vmin = 0.0;
+    const auto &particles = ps_.get_particles();
+
+    for (size_t i = 0; i < particle_count_; ++i)
     {
         const Particle &particle = particles[i];
         circles_.set_color(
-            i, cmap_.map[((length(particle.v) - min) / (max - min)) * 255]);
+            i,
+            cmap_.map[((length(particle.v) - vmin) / (vmax - vmin)) * 255.f]);
         circles_.set_location(i, particle.s);
 
         auto len = length(particle.a);

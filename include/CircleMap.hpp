@@ -53,6 +53,12 @@ class CircleMap : public sf::Drawable, public sf::Transformable
      */
     void set_location(const size_t i, sf::Vector2f location) noexcept;
 
+    /**
+     * @brief
+     *
+     */
+    void push(const float radius) noexcept;
+
   private:
     std::vector<sf::CircleShape> circles_;
 };

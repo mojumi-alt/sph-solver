@@ -4,6 +4,7 @@
 #include <cmath>
 #include <vector>
 
+#include "Inflow.hpp"
 #include "Obstacle.hpp"
 #include "Particle.hpp"
 #include "SpatialHash.hpp"
@@ -27,10 +28,14 @@ class ParticleSystem
      *
      * @param initial_state
      * @param domain_size
+     * @param obstacles
+     * @param inflows
+     * @param h
      */
     explicit ParticleSystem(std::vector<Particle> initial_state,
                             sf::Vector2f domain_size,
                             std::vector<Obstacle> obstacles,
+                            std::vector<Inflow> inflows,
                             const float h = 0.3) noexcept;
 
     /**
@@ -94,6 +99,7 @@ class ParticleSystem
     sf::Vector2f domain_size_;
     std::vector<Particle> particles_;
     std::vector<Obstacle> obstacles_;
+    std::vector<Inflow> inflows_;
 
     /**
      * @brief
