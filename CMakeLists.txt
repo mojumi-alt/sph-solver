@@ -26,53 +26,20 @@ add_executable(simple "${sources}" ./examples/Simple.cc)
 target_include_directories(simple PRIVATE ./include)
 target_link_libraries(simple PRIVATE sfml-graphics sfml-window sfml-system)
 
-add_executable(splash_big "${sources}" ./examples/Splash_big.cc)
-target_include_directories(splash_big PRIVATE ./include)
-target_link_libraries(splash_big PRIVATE sfml-graphics sfml-window sfml-system)
+add_executable(splash "${sources}" ./examples/Splash.cc)
+target_include_directories(splash PRIVATE ./include)
+target_link_libraries(splash PRIVATE sfml-graphics sfml-window sfml-system)
 
-add_executable(splash_mid "${sources}" ./examples/Splash_mid.cc)
-target_include_directories(splash_mid PRIVATE ./include)
-target_link_libraries(splash_mid PRIVATE sfml-graphics sfml-window sfml-system)
+add_executable(steady "${sources}" ./examples/Steady.cc)
+target_include_directories(steady PRIVATE ./include)
+target_link_libraries(steady PRIVATE sfml-graphics sfml-window sfml-system)
 
-add_executable(splash_tiny "${sources}" ./examples/Splash_tiny.cc)
-target_include_directories(splash_tiny PRIVATE ./include)
-target_link_libraries(splash_tiny PRIVATE sfml-graphics sfml-window sfml-system)
+add_executable(obstacles_comp "${sources}" ./examples/ObstacleComp.cc)
+target_include_directories(obstacles_comp PRIVATE ./include)
+target_link_libraries(obstacles_comp PRIVATE sfml-graphics sfml-window sfml-system)
 
-add_executable(steady_big "${sources}" ./examples/Steady_big.cc)
-target_include_directories(steady_big PRIVATE ./include)
-target_link_libraries(steady_big PRIVATE sfml-graphics sfml-window sfml-system)
-
-add_executable(steady_mid "${sources}" ./examples/Steady_mid.cc)
-target_include_directories(steady_mid PRIVATE ./include)
-target_link_libraries(steady_mid PRIVATE sfml-graphics sfml-window sfml-system)
-
-add_executable(steady_tiny "${sources}" ./examples/Steady_tiny.cc)
-target_include_directories(steady_tiny PRIVATE ./include)
-target_link_libraries(steady_tiny PRIVATE sfml-graphics sfml-window sfml-system)
-
-add_executable(obstacles_comp_big "${sources}" ./examples/Obstacle_comp_big.cc)
-target_include_directories(obstacles_comp_big PRIVATE ./include)
-target_link_libraries(obstacles_comp_big PRIVATE sfml-graphics sfml-window sfml-system)
-
-add_executable(obstacles_comp_mid "${sources}" ./examples/Obstacle_comp_mid.cc)
-target_include_directories(obstacles_comp_mid PRIVATE ./include)
-target_link_libraries(obstacles_comp_mid PRIVATE sfml-graphics sfml-window sfml-system)
-
-add_executable(obstacles_comp_tiny "${sources}" ./examples/Obstacle_comp_tiny.cc)
-target_include_directories(obstacles_comp_tiny PRIVATE ./include)
-target_link_libraries(obstacles_comp_tiny PRIVATE sfml-graphics sfml-window sfml-system)
-
-add_executable(slope_big "${sources}" ./examples/Slope_big.cc)
-target_include_directories(slope_big PRIVATE ./include)
-target_link_libraries(slope_big PRIVATE sfml-graphics sfml-window sfml-system)
-
-add_executable(slope_mid "${sources}" ./examples/Slope_mid.cc)
-target_include_directories(slope_mid PRIVATE ./include)
-target_link_libraries(slope_mid PRIVATE sfml-graphics sfml-window sfml-system)
-
-add_executable(slope_tiny "${sources}" ./examples/Slope_tiny.cc)
-target_include_directories(slope_tiny PRIVATE ./include)
-target_link_libraries(slope_tiny PRIVATE sfml-graphics sfml-window sfml-system)
-
+add_executable(slope "${sources}" ./examples/Slope.cc)
+target_include_directories(slope PRIVATE ./include)
+target_link_libraries(slope PRIVATE sfml-graphics sfml-window sfml-system)
 
 configure_file(./resources/arial.ttf arial.ttf COPYONLY)
