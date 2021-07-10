@@ -4,5 +4,5 @@
 
 namespace sph
 {
-void integrate(ParticleSystem &ps, const float dt);
+void integrate(ParticleSystem &ps, const float dt, const float vmax);
 }

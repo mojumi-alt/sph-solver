@@ -44,7 +44,7 @@ const SpatialHash &ParticleSystem::get_spatial_hash() const noexcept
 void ParticleSystem::advance(const float dt) noexcept
 {
     interactions = 0;
-    integrate(*this, dt);
+    integrate(*this, dt, vmax);
 
     apply_obstacles_();
 
