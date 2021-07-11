@@ -1,6 +1,7 @@
 #include <Visualizer.hpp>
-
 #include <sstream>
+
+#include "Interact.hpp"
 
 namespace sph
 {
@@ -72,6 +73,7 @@ void Visualizer::run() noexcept
     view.setViewport(sf::FloatRect(0.0f, 0.f, offset, offset));
 
     sf::Clock clk;
+    Interaction interactions(ps_);
 
     while (window.isOpen())
     {
@@ -81,7 +83,9 @@ void Visualizer::run() noexcept
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+            interactions.set_state(event);
         }
+        interactions.interact(window);
 
         window.clear(sf::Color(background_color));
 

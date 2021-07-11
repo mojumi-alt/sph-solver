@@ -21,7 +21,7 @@ int main()
     };
 
     std::vector<sph::Inflow> inflows{
-        sph::Inflow({1.0, 1.0, 2, 2}, 0.2, {0.0, 0.0})};
+        sph::Inflow({1.0, 1.0, 2, 2}, 0.1, {0.0, 0.0})};
 
     inflows[0].end_time = 200;
 

@@ -6,7 +6,7 @@
 
 int main()
 {
-    float width = 10, height = 10, size = 0.2;
+    float width = 10, height = 10, size = 0.25;
 
     std::vector<sph::Obstacle> obstacles{
         sph::Obstacle({0.5, 0.5}, {5.0, 0.5}),
