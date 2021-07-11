@@ -22,10 +22,10 @@ class Inflow
 
   private:
     std::tuple<float, float, float, float> volume_;
-    double current_time_, rate_, total_time;
+    double current_time_ = 0.0, rate_ = 1.0, total_time = 0.0;
     sf::Vector2f initial_velocity_;
     std::default_random_engine engine_;
     std::uniform_real_distribution<float> x_distr_, y_distr_;
-    float current_x_, current_y_, offset_ = 0.2;
+    float current_x_ = 0.0, current_y_ = 0.0, offset_ = 0.2;
 };
 } // namespace sph

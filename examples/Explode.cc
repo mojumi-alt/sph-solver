@@ -4,7 +4,6 @@
 #include "ParticleSystem.hpp"
 #include "Visualizer.hpp"
 
-
 int main()
 {
     float width = 10, height = 10, size = 0.2;
@@ -20,8 +19,7 @@ int main()
 
     inflows[0].end_time = 50;
 
-    sph::ParticleSystem ps({}, {width, height}, obstacles, inflows,
-                           size);
+    sph::ParticleSystem ps({}, {width, height}, obstacles, inflows, size);
 
     sph::Visualizer w(ps, 80);
     w.run();

@@ -1,8 +1,8 @@
+#include "Inflow.hpp"
 #include "Obstacle.hpp"
 #include "Particle.hpp"
 #include "ParticleSystem.hpp"
 #include "Visualizer.hpp"
-#include "Inflow.hpp"
 
 int main()
 {
@@ -14,12 +14,12 @@ int main()
     };
 
     std::vector<sph::Inflow> inflows{
-        sph::Inflow({0.1, 0.1, 2, 2}, 1.0, {0.0, 1.0})};
+        sph::Inflow({0.1, 0.1, 2, 2}, 0.5, {0.0, 1.0})};
 
     float width = 10, height = 10, size = 0.25;
 
-
-    sph::ParticleSystem ps(particles, {width, height}, obstacles, inflows, size);
+    sph::ParticleSystem ps(particles, {width, height}, obstacles, inflows,
+                           size);
 
     sph::Visualizer w(ps, 80);
     w.run();

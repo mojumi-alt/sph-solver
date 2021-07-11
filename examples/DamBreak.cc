@@ -6,7 +6,7 @@ int main()
 {
     std::vector<sph::Particle> particles;
 
-    float width = 10, height = 10, size = 0.2;
+    float width = 10, height = 10, size = 0.3;
 
     for (float x = size; x < width / 2; x += size - 0.01)
         for (float y = 6; y < width - size; y += size - 0.01)
