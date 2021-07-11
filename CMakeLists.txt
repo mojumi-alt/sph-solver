@@ -58,4 +58,8 @@ add_executable(explode "${sources}" ./examples/Explode.cc)
 target_include_directories(explode PRIVATE ./include)
 target_link_libraries(explode PRIVATE sfml-graphics sfml-window sfml-system)
 
+add_executable(pools "${sources}" ./examples/Pools.cc)
+target_include_directories(pools PRIVATE ./include)
+target_link_libraries(pools PRIVATE sfml-graphics sfml-window sfml-system)
+
 configure_file(./resources/arial.ttf arial.ttf COPYONLY)
