@@ -22,45 +22,47 @@ set(sources
     ./src/Visualizer.cc
 )
 
+add_library(sph "${sources}")
+target_include_directories(sph PRIVATE ./include)
 
-add_executable(simple "${sources}" ./examples/Simple.cc)
+add_executable(simple ./examples/Simple.cc)
 target_include_directories(simple PRIVATE ./include)
-target_link_libraries(simple PRIVATE sfml-graphics sfml-window sfml-system)
+target_link_libraries(simple PRIVATE sph sfml-graphics sfml-window sfml-system)
 
-add_executable(splash "${sources}" ./examples/Splash.cc)
+add_executable(splash ./examples/Splash.cc)
 target_include_directories(splash PRIVATE ./include)
-target_link_libraries(splash PRIVATE sfml-graphics sfml-window sfml-system)
+target_link_libraries(splash PRIVATE sph sfml-graphics sfml-window sfml-system)
 
-add_executable(steady "${sources}" ./examples/Steady.cc)
+add_executable(steady ./examples/Steady.cc)
 target_include_directories(steady PRIVATE ./include)
-target_link_libraries(steady PRIVATE sfml-graphics sfml-window sfml-system)
+target_link_libraries(steady PRIVATE sph sfml-graphics sfml-window sfml-system)
 
-add_executable(obstacles_comp "${sources}" ./examples/ObstacleComp.cc)
+add_executable(obstacles_comp ./examples/ObstacleComp.cc)
 target_include_directories(obstacles_comp PRIVATE ./include)
-target_link_libraries(obstacles_comp PRIVATE sfml-graphics sfml-window sfml-system)
+target_link_libraries(obstacles_comp PRIVATE sph sfml-graphics sfml-window sfml-system)
 
-add_executable(slope "${sources}" ./examples/Slope.cc)
+add_executable(slope ./examples/Slope.cc)
 target_include_directories(slope PRIVATE ./include)
-target_link_libraries(slope PRIVATE sfml-graphics sfml-window sfml-system)
+target_link_libraries(slope PRIVATE sph sfml-graphics sfml-window sfml-system)
 
-add_executable(dam_break "${sources}" ./examples/DamBreak.cc)
+add_executable(dam_break ./examples/DamBreak.cc)
 target_include_directories(dam_break PRIVATE ./include)
-target_link_libraries(dam_break PRIVATE sfml-graphics sfml-window sfml-system)
+target_link_libraries(dam_break PRIVATE sph sfml-graphics sfml-window sfml-system)
 
-add_executable(horizontal "${sources}" ./examples/Horizontal.cc)
+add_executable(horizontal ./examples/Horizontal.cc)
 target_include_directories(horizontal PRIVATE ./include)
-target_link_libraries(horizontal PRIVATE sfml-graphics sfml-window sfml-system)
+target_link_libraries(horizontal PRIVATE sph sfml-graphics sfml-window sfml-system)
 
-add_executable(flow "${sources}" ./examples/Flow.cc)
+add_executable(flow ./examples/Flow.cc)
 target_include_directories(flow PRIVATE ./include)
-target_link_libraries(flow PRIVATE sfml-graphics sfml-window sfml-system)
+target_link_libraries(flow PRIVATE sph sfml-graphics sfml-window sfml-system)
 
-add_executable(explode "${sources}" ./examples/Explode.cc)
+add_executable(explode ./examples/Explode.cc)
 target_include_directories(explode PRIVATE ./include)
-target_link_libraries(explode PRIVATE sfml-graphics sfml-window sfml-system)
+target_link_libraries(explode PRIVATE sph sfml-graphics sfml-window sfml-system)
 
-add_executable(pools "${sources}" ./examples/Pools.cc)
+add_executable(pools ./examples/Pools.cc)
 target_include_directories(pools PRIVATE ./include)
-target_link_libraries(pools PRIVATE sfml-graphics sfml-window sfml-system)
+target_link_libraries(pools PRIVATE sph sfml-graphics sfml-window sfml-system)
 
 configure_file(./resources/arial.ttf arial.ttf COPYONLY)
