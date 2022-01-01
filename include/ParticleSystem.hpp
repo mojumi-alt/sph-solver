@@ -93,6 +93,14 @@ class ParticleSystem
      */
     std::vector<Obstacle> &get_obstacles() noexcept;
 
+    /**
+     * @brief 
+     * 
+     * @param location 
+     * @return float 
+     */
+    float density_at(const sf::Vector2f& location, const float h) noexcept;
+
   private:
     float h_;
     SpatialHash hash_;

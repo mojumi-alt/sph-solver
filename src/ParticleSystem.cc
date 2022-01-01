@@ -13,6 +13,18 @@ inline float length(const sf::Vector2f &v)
     return std::sqrt(v.x * v.x + v.y * v.y);
 }
 
+inline sf::Vector2i vec_floor(const sf::Vector2f &vec)
+{
+    return {static_cast<int>(std::floor(vec.x)),
+            static_cast<int>(std::floor(vec.y))};
+}
+
+template<typename T, typename U>
+inline auto vec_mult(const sf::Vector2<T>& lhs, const sf::Vector2<U>& rhs)
+{
+    return sf::Vector2<T>{lhs.x * rhs.x, lhs.y * rhs.y};
+}
+
 ParticleSystem::ParticleSystem(std::vector<Particle> initial_state,
                                sf::Vector2f domain_size,
                                std::vector<Obstacle> obstacles,
@@ -192,6 +204,54 @@ void ParticleSystem::calculate_forces_() noexcept
 }
 
 float ParticleSystem::get_particle_size() const noexcept { return h_; }
+
+float ParticleSystem::density_at(const sf::Vector2f& location, const float h) noexcept
+{
+
+    // Get spatial hash dimensions
+    const auto [width, height] = hash_.get_segment_size();
+
+    // Get current bucket coordinates.
+    const auto [x, y] = vec_floor(location / h_);
+
+    // Compute the search radius depending on smoothing length.
+    const int radius = 1 + std::ceil(h / hash_.get_cell_size());
+    // std::cout << radius << " " << hash_.get_cell_size() << "\n";
+
+    // Cell size matches up with kernel radius, so we
+    // have to only consider direct neighbours.
+    int right = std::min(width, x + radius),
+        bottom = std::min(height, y + radius);
+
+    // Actually we only have to not consider all the top
+    // left neighbours either.
+    int left = std::max(0, x - radius);
+    int top = std::max(0, y - radius);
+
+    // Total local density.
+    float result = 0.0;
+
+    // Compute density over near buckets.
+    for (int i = top; i < bottom; ++i)
+    {
+        for (int j = left; j < right; ++j)
+        {
+
+            // Get other search bucket.
+            auto &other_bucket = hash_.get_bucket(j, i);
+
+            // Do not consider empty buckets.
+            if (other_bucket.size() == 0)
+                continue;
+
+            // Consider density of particles in bucket.
+            for (auto &pj : other_bucket)
+                result += pj->m * kernels::poly6(length(pj->s - location), h);
+        }
+    }
+
+   return result;
+}
 
 void ParticleSystem::apply_boundaries_(Particle &p) noexcept
 {
