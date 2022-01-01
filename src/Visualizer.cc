@@ -42,28 +42,29 @@ Visualizer::Visualizer(ParticleSystem &ps, const float scaling,
     stats_.setFont(font_);
     stats_.setPosition(0, -0.7);
     stats_.setScale(0.006, 0.006);
+    constexpr size_t vertices_per_line = 2;
 
     if (show_debug_geom)
     {
-        constexpr size_t vertices_per_line = 2;
         force_arrows_.resize(particle_count_ * vertices_per_line);
         force_arrows_.setPrimitiveType(sf::Lines);
         for (size_t i = 0; i < force_arrows_.getVertexCount(); ++i)
             force_arrows_[i].color = sf::Color::Black;
 
-        auto ps_obstacles = ps.get_obstacles();
-        obstacles_.resize(ps_obstacles.size() * vertices_per_line);
-        obstacles_.setPrimitiveType(sf::Lines);
-        for (size_t i = 0; i < ps_obstacles.size(); ++i)
-        {
-            sf::Vertex *current = &obstacles_[i * vertices_per_line];
+    }
 
-            auto [start, end] = ps_obstacles[i].get_line_coords();
-            current[0].position = start;
-            current[0].color = sf::Color(foreground_color);
-            current[1].position = end;
-            current[1].color = sf::Color(foreground_color);
-        }
+    auto ps_obstacles = ps.get_obstacles();
+    obstacles_.resize(ps_obstacles.size() * vertices_per_line);
+    obstacles_.setPrimitiveType(sf::Lines);
+    for (size_t i = 0; i < ps_obstacles.size(); ++i)
+    {
+        sf::Vertex *current = &obstacles_[i * vertices_per_line];
+
+        auto [start, end] = ps_obstacles[i].get_line_coords();
+        current[0].position = start;
+        current[0].color = sf::Color(foreground_color);
+        current[1].position = end;
+        current[1].color = sf::Color(foreground_color);
     }
 
     boundaries_.set_color(sf::Color(foreground_color));
