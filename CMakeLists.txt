@@ -18,6 +18,7 @@ set(sources
     ./src/Obstacle.cc
     ./src/ParticleSystem.cc
     ./src/SpatialHash.cc
+    ./src/TextureMap.cc
     ./src/TileMap.cc
     ./src/Visualizer.cc
 )
