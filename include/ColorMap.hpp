@@ -44,16 +44,18 @@ const ColorMap rainbow({sf::Color(255, 0, 255), sf::Color(0, 0, 255),
                        {0, 42, 84, 126, 168, 210, 255});
 
 const ColorMap rainbow_to_white({sf::Color(255, 0, 255), sf::Color(0, 0, 255),
-                        sf::Color(0, 255, 128), sf::Color(0, 255, 0),
-                        sf::Color(255, 255, 0), sf::Color(255, 128, 0),
-                        sf::Color(255, 0, 0), sf::Color(255, 255, 255)},
-                       {0, 42, 84, 126, 168, 210, 245, 255});
+                                 sf::Color(0, 255, 128), sf::Color(0, 255, 0),
+                                 sf::Color(255, 255, 0), sf::Color(255, 128, 0),
+                                 sf::Color(255, 0, 0),
+                                 sf::Color(255, 255, 255)},
+                                {0, 42, 84, 126, 168, 210, 245, 255});
 
-const ColorMap white_to_rainbow({sf::Color(255, 255, 255), sf::Color(255, 0, 255),
-                        sf::Color(0, 0, 255), sf::Color(0, 255, 128),
-                        sf::Color(0, 255, 0), sf::Color(255, 255, 0),
-                        sf::Color(255, 128, 0), sf::Color(255, 0, 0)},
-                       {0, 10, 42, 84, 126, 168, 210, 255});
+const ColorMap white_to_rainbow({sf::Color(255, 255, 255),
+                                 sf::Color(255, 0, 255), sf::Color(0, 0, 255),
+                                 sf::Color(0, 255, 128), sf::Color(0, 255, 0),
+                                 sf::Color(255, 255, 0), sf::Color(255, 128, 0),
+                                 sf::Color(255, 0, 0)},
+                                {0, 10, 42, 84, 126, 168, 210, 255});
 
 const ColorMap grayscale({sf::Color(0, 0, 0), sf::Color(255, 255, 255)},
                          {0, 255});

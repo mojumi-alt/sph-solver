@@ -24,10 +24,10 @@ class TextureMap : public sf::Drawable, public sf::Transformable
 
     /**
      * @brief Set the scale object
-     * 
-     * @param factor 
+     *
+     * @param factor
      */
-    void set_scale(const sf::Vector2f& factor) noexcept;
+    void set_scale(const sf::Vector2f &factor) noexcept;
 
     /**
      * @brief
@@ -54,8 +54,8 @@ class TextureMap : public sf::Drawable, public sf::Transformable
     sf::Vector2u get_size() const noexcept;
 
     /**
-     * @brief 
-     * 
+     * @brief
+     *
      */
     void update() noexcept;
 

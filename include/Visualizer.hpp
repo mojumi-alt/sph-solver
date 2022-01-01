@@ -8,8 +8,8 @@
 #include "Grid.hpp"
 #include "ParticleSystem.hpp"
 #include "SpatialHash.hpp"
-#include "TileMap.hpp"
 #include "TextureMap.hpp"
+#include "TileMap.hpp"
 
 namespace sph
 {
@@ -18,7 +18,8 @@ class Visualizer
   public:
     const size_t foreground_color = 0x98C1D9FF, background_color = 0x3D5A80FF,
                  hash_tile_color = 0x00003060;
-    float offset = 1.f, resolution = 0.07, p_max = 150.0, p_min = 0.0, smoothing_length = 0.4;
+    float offset = 1.f, resolution = 0.07, p_max = 150.0, p_min = 0.0,
+          smoothing_length = 0.4;
     const bool show_debug_geom;
 
     /**
@@ -27,7 +28,8 @@ class Visualizer
      * @param ps Particle system to visualize.
      * @param scaling Window scaling.
      */
-    explicit Visualizer(ParticleSystem &ps, const float scaling = 1.0, const bool show_debug_geom = false) noexcept;
+    explicit Visualizer(ParticleSystem &ps, const float scaling = 1.0,
+                        const bool show_debug_geom = false) noexcept;
 
     /**
      * @brief Open and run visualizer window.

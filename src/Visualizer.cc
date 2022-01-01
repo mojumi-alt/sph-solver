@@ -17,22 +17,26 @@ inline sf::Vector2u vec_ceil(const sf::Vector2f &vec)
             static_cast<unsigned int>(std::ceil(vec.y))};
 }
 
-template<typename T, typename U>
-inline auto vec_mult(const sf::Vector2<T>& lhs, const sf::Vector2<U>& rhs)
+template <typename T, typename U>
+inline auto vec_mult(const sf::Vector2<T> &lhs, const sf::Vector2<U> &rhs)
 {
     return sf::Vector2<T>{lhs.x * rhs.x, lhs.y * rhs.y};
 }
 
-Visualizer::Visualizer(ParticleSystem &ps, const float scaling, const bool show_debug_geom) noexcept
-    : show_debug_geom(show_debug_geom), scaling_(scaling), ps_(ps), h_(compute_optimal_h_()),
-      particle_count_(ps.get_particles().size()), cmap_(color_maps::white_to_rainbow),
-      circles_(particle_count_, h_), boundaries_({2, 2}, ps.get_domain_size()),
+Visualizer::Visualizer(ParticleSystem &ps, const float scaling,
+                       const bool show_debug_geom) noexcept
+    : show_debug_geom(show_debug_geom), scaling_(scaling), ps_(ps),
+      h_(compute_optimal_h_()), particle_count_(ps.get_particles().size()),
+      cmap_(color_maps::white_to_rainbow), circles_(particle_count_, h_),
+      boundaries_({2, 2}, ps.get_domain_size()),
       hash_grid_(vec_ceil(ps_.get_domain_size() / ps_.get_particle_size()) +
                      sf::Vector2u{1, 1},
                  {ps_.get_particle_size(), ps_.get_particle_size()}),
       hash_tiles_(vec_ceil(ps_.get_domain_size() / ps_.get_particle_size()),
                   {ps_.get_particle_size(), ps_.get_particle_size()}),
-      fluid_(vec_ceil(vec_mult(ps_.get_domain_size(), sf::Vector2f{1.f / resolution, 1.f / resolution})))
+      fluid_(
+          vec_ceil(vec_mult(ps_.get_domain_size(),
+                            sf::Vector2f{1.f / resolution, 1.f / resolution})))
 {
     font_.loadFromFile("./arial.ttf");
     stats_.setFont(font_);
@@ -113,7 +117,7 @@ void Visualizer::run() noexcept
             window.draw(circles_);
             window.draw(force_arrows_);
         }
-        else 
+        else
         {
             window.draw(fluid_);
         }
@@ -153,15 +157,15 @@ void Visualizer::update_() noexcept
         }
 
         const auto &particles = ps_.get_particles();
-        
 
         for (size_t i = 0; i < particle_count_; ++i)
         {
             const Particle &particle = particles[i];
-            const auto p = std::max(p_min, std::min(p_max, ps_.density_at(particle.s, smoothing_length)));
+            const auto p = std::max(
+                p_min,
+                std::min(p_max, ps_.density_at(particle.s, smoothing_length)));
             circles_.set_color(
-                i,
-                cmap_.map[((p - p_min) / (p_max - p_min)) * 255.f]);
+                i, cmap_.map[((p - p_min) / (p_max - p_min)) * 255.f]);
             circles_.set_location(i, particle.s);
 
             auto len = length(particle.a);
@@ -174,29 +178,33 @@ void Visualizer::update_() noexcept
             line[1].position = particle.s + dir;
         }
 
-        const auto [hash_x_count, hash_y_count] = ps_.get_spatial_hash().get_segment_size();
+        const auto [hash_x_count, hash_y_count] =
+            ps_.get_spatial_hash().get_segment_size();
         for (size_t y = 0; y < hash_y_count; ++y)
             for (size_t x = 0; x < hash_x_count; ++x)
             {
                 auto count = ps_.get_spatial_hash().get_bucket(x, y).size();
                 hash_tiles_.set_color(x, y, sf::Color(hash_tile_color * count));
             }
-
-    } else
+    }
+    else
     {
         const auto [x_count, y_count] = fluid_.get_size();
         for (int y = 0; y < y_count; ++y)
         {
             for (int x = 0; x < x_count; ++x)
-                {
-                    float p = std::max(p_min,std::min(p_max, ps_.density_at(sf::Vector2f{x * resolution, y * resolution}, smoothing_length)));
-                    fluid_.set_color(x, y,
-                        cmap_.map[((p - p_min) / (p_max - p_min)) * 255.f]);
-                }
+            {
+                float p = std::max(
+                    p_min,
+                    std::min(p_max, ps_.density_at(sf::Vector2f{x * resolution,
+                                                                y * resolution},
+                                                   smoothing_length)));
+                fluid_.set_color(
+                    x, y, cmap_.map[((p - p_min) / (p_max - p_min)) * 255.f]);
+            }
         }
         fluid_.update();
     }
-
 }
 
 float Visualizer::compute_optimal_h_() noexcept

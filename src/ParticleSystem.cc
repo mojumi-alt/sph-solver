@@ -18,8 +18,8 @@ inline sf::Vector2i vec_floor(const sf::Vector2f &vec)
             static_cast<int>(std::floor(vec.y))};
 }
 
-template<typename T, typename U>
-inline auto vec_mult(const sf::Vector2<T>& lhs, const sf::Vector2<U>& rhs)
+template <typename T, typename U>
+inline auto vec_mult(const sf::Vector2<T> &lhs, const sf::Vector2<U> &rhs)
 {
     return sf::Vector2<T>{lhs.x * rhs.x, lhs.y * rhs.y};
 }
@@ -204,7 +204,8 @@ void ParticleSystem::calculate_forces_() noexcept
 
 float ParticleSystem::get_particle_size() const noexcept { return h_; }
 
-float ParticleSystem::density_at(const sf::Vector2f& location, const float h) noexcept
+float ParticleSystem::density_at(const sf::Vector2f &location,
+                                 const float h) noexcept
 {
 
     // Get spatial hash dimensions
@@ -248,7 +249,7 @@ float ParticleSystem::density_at(const sf::Vector2f& location, const float h) no
         }
     }
 
-   return result;
+    return result;
 }
 
 void ParticleSystem::apply_boundaries_(Particle &p) noexcept
