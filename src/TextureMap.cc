@@ -2,7 +2,6 @@
 
 #include <cstring>
 #include <exception>
-#include <iostream>
 
 namespace sph::visualization
 {

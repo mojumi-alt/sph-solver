@@ -1,5 +1,4 @@
 #include "Interact.hpp"
-#include "iostream"
 
 namespace sph
 {

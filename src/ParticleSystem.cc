@@ -3,7 +3,6 @@
 #include "Kernels.hpp"
 
 #include <algorithm>
-#include <iostream>
 
 namespace sph
 {
@@ -216,7 +215,6 @@ float ParticleSystem::density_at(const sf::Vector2f& location, const float h) no
 
     // Compute the search radius depending on smoothing length.
     const int radius = 1 + std::ceil(h / hash_.get_cell_size());
-    // std::cout << radius << " " << hash_.get_cell_size() << "\n";
 
     // Cell size matches up with kernel radius, so we
     // have to only consider direct neighbours.

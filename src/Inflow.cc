@@ -1,7 +1,6 @@
 #include "Inflow.hpp"
 
 #include <cmath>
-#include <iostream>
 
 namespace sph
 {
